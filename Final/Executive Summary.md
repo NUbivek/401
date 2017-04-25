@@ -10,38 +10,38 @@ Data Preparation:
 A random sample of 500 data sets was taken to perform the study. R was used to sample 500 data from the set of abalone data sets. Here’s the result of the sample:
 
 
-**Figure 1**![image](https://cloud.githubusercontent.com/assets/26909910/25392714/65b7c914-29a7-11e7-8526-7ca14f9ef043.png)
+**Figure 1**  ![image](https://cloud.githubusercontent.com/assets/26909910/25392714/65b7c914-29a7-11e7-8526-7ca14f9ef043.png)
 
 
 An exploratory study such as this one requires a good understanding of the randomly sampled data from the observational study. Therefore, upon taking the sample, it is useful to summarize the data sets by using the summary (mydata) code in R. A clean “30,000 feet” information about the data set can be derived from the summary exercise. The exercise also provides a good understanding of the nature and basic facts of the data we are dealing with.
 
 
-**Figure 2**![image](https://cloud.githubusercontent.com/assets/26909910/25392912/028e8c14-29a8-11e7-85c2-a8e59fb85220.png)
+**Figure 2**  ![image](https://cloud.githubusercontent.com/assets/26909910/25392912/028e8c14-29a8-11e7-85c2-a8e59fb85220.png)
 
-**Question 1:
+**Question 1:**
 
 Write a function in R to calculate the Pearson chi square statistic on 2x2 contingency tables which have the marginal totals. Use this function to test for independence of SHUCK and VOLUME. Show the chi square value and p-value and discuss the results. What conclusion results from rejection of the null hypothesis? What does this indicate about the relationship between SHUCK and VOLUME?
 Answer:
 
 Function to calculate the Pearson chi square statistic:
 
-**Figure 3**![image](https://cloud.githubusercontent.com/assets/26909910/25393121/a379f578-29a8-11e7-948f-bf5696a1672e.png)
+**Figure 3**  ![image](https://cloud.githubusercontent.com/assets/26909910/25393121/a379f578-29a8-11e7-948f-bf5696a1672e.png)
 
 In order to calculate the chi square value to determine the interdependence of SHUCK and VOLUME, I established a 2x2 contingency tables function of x, and used the chi square formula on the function to return the value of Chi Square for SHUCK and VOLUME. The Chi square function I used resulted in a chi square value of 323.2132. Upon identifying the chi square value, I plugged in the identified chi square value to calculate the p-value; the p-value resulted in 2.895373e-72. The Chi-square test would allow us to test how likely it is that SHUCK and VOLUME affiliation are completely independent. It also tells us how likely it is that the distribution of SHUCK and VOLUME in each category is due to chance i.e. if the null hypothesis is correct/incorrect. The chi square value of 323.2132 and p value of 2.895373e-72 indicate that the hypothesis is very unlikely to happen by chance. Hence, we could reject the null hypothesis that SHUCK and VOLUME are independent, and accept the alternative hypothesis that SHUCK and VOLUME are dependent.
 
-**Question 2
+**Question 2**
 
 Perform an analysis of variance with aov() on SHUCK using CLASS and SEX as the independent variables. Assume equal variances. Perform two analyses. To what extent do these results suggest male and female abalones can be combined into a single category labeled as “adults”?
 
 Answer:
 
-**Figure 4**![image](https://cloud.githubusercontent.com/assets/26909910/25393207/dcf6b46c-29a8-11e7-88b7-617ed33fbb66.png)
+**Figure 4**  ![image](https://cloud.githubusercontent.com/assets/26909910/25393207/dcf6b46c-29a8-11e7-88b7-617ed33fbb66.png)
 
 Analysis of variance on SHUCK using CLASS and SEX as independent variables allows comparing the differences between CLASS’s and SEX’s means. Two analyses were conducted to gauge the extent to which the two independent variables – SEX and CLASS – could be combined into a single category labeled “adults”. The results were then presented in ANOVA table as shown in Figure 4. The first ANOVA table shows the results of ANOVA analysis performed by adding an interaction term -- CLASS*SEX – to the model. Figure 4 shows the difference between the ANOVA table with and without the interaction term. The significance level, however, stays the same at different ANOVA analyses. The model was further refined using “TukeyHSD ()” function to adjust unequal sample sizes on the “CLASS” and “SEX” variables without the interaction term. Figure 5 shows the results of analysis using the TukeyHSD function without the interaction term.
 
-**Figure 5**![image](https://cloud.githubusercontent.com/assets/26909910/25393244/f77aea1a-29a8-11e7-884e-a8923fa1c6b9.png)
+**Figure 5**  ![image](https://cloud.githubusercontent.com/assets/26909910/25393244/f77aea1a-29a8-11e7-884e-a8923fa1c6b9.png)
 
-**Question 3:
+**Question 3:**
 
 Use ggplot2 to form a scatterplot of SHUCK versus VOLUME and a scatterplot of their logarithms labeling the variables as L_SHUCK and the latter as L_VOLUME. Use color to differentiate CLASS in the plots. Compare the two scatterplots. Where do the various CLASS levels appear in the plots? What are the implications of the observed patterns regarding harvesting of abalones?  
 
@@ -49,7 +49,7 @@ Answer:
 
 SHUCK and VOLUME variables are plotted in the Figure 6 scatter plot, and their respective logarithmic values are plotted in Figure 7 scatter plot as L_SHUCK and L_VOLUME respectively.
 
-**Figure 6**![image](https://cloud.githubusercontent.com/assets/26909910/25393301/2133c714-29a9-11e7-9b4b-ef01ed0d6bae.png)
+**Figure 6** ![image](https://cloud.githubusercontent.com/assets/26909910/25393301/2133c714-29a9-11e7-9b4b-ef01ed0d6bae.png)
 
 Above Figure depicts the relationship between SHUCK and VOLUME variables. The variables are further categorized into different CLASS – A1, A2, A3, A4, A5, A6. Each CLASS is color coded, and we can deduce from Figure 6 that class A1 is concentrated mostly in the 0.0-0.025 VOLUME area and 0.0 – 0.3 SHUCK area; whereas, CLASS A2, A3, A4, A5, and A6 tend to spread heavily between 0.01 – 0.075 in VOLUME area. CLASS A2 – A6, however, tend to differ a lot in SHUCK area while belonging to similar VOLUME area. Meaning, a lot of abalones in CLASS A2 – A6 have similar volume but different shuck. CLASS A2, for example, is heavily concentrated in SHUCK area between 0.0 and 0.3; whereas, CLASS A3 and A6 are heavily concentrated in SHUCK area 0.3-0.6. The SHUCK as a function of VOLUME results an increasing variability in SHUCK as the values of VOLUME increases. The transformed, logarithmic, value of the same relationship between SHUCK and VOLUME separated by CLASS is, however, much different from the untransformed values. The transformed plot is much more stable than the untransformed plot. As indicated in Figure 7, the logarithmic values of the VOLUME and SHUCK for abalones in CLASS A1-A6 hold a more stable distribution than the one in Figure 6. This is important because the stabilization of variability in SHUCK as a function of VOLUME helps us discover statistically significant coefficients for each CLASS and facilitates further calculations and analysis.
 
