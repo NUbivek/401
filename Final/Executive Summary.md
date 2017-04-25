@@ -10,10 +10,10 @@ Data Preparation:
 A random sample of 500 data sets was taken to perform the study. R was used to sample 500 data from the set of abalone data sets. Here’s the result of the sample:
 
 ![image](https://cloud.githubusercontent.com/assets/26909910/25392714/65b7c914-29a7-11e7-8526-7ca14f9ef043.png)
-                  **Figure 1**
+  **Figure 1**
 
 An exploratory study such as this one requires a good understanding of the randomly sampled data from the observational study. Therefore, upon taking the sample, it is useful to summarize the data sets by using the summary (mydata) code in R. A clean “30,000 feet” information about the data set can be derived from the summary exercise. The exercise also provides a good understanding of the nature and basic facts of the data we are dealing with.
 
 ![image](https://cloud.githubusercontent.com/assets/26909910/25392912/028e8c14-29a8-11e7-85c2-a8e59fb85220.png)
-                  **Figure 2**
+  **Figure 2**
 
