@@ -1,0 +1,147 @@
+abalone <- read.csv(file.path("/Users/bivekadhikari/Dropbox/NORTHWESTERN/PREDICT 401/Data
+Analysis II","mydata.csv"),sep="")
+str(abalone)
+set.seed(123)
+mydata <- abalone[sample(1:nrow(abalone),500),]
+str(mydata)
+summary(mydata)
+shuck <- factor(mydata$SHUCK > median(mydata$SHUCK), labels = c("below", "above"))
+# median-dichotomized SHUCK
+volume <- factor(mydata$VOLUME > median(mydata$VOLUME), labels = c("below", "above"))
+# median-dichotomized VOLUME
+shuck_volume <- addmargins(table(shuck,volume))
+str(shuck_volume)
+
+combined <- addmargins(table(shuck, volume))
+whipples_chi <- function(x) {
+e11<- x[3,1]*x[1,3]/x[3,3]
+e12<- x[3,2]*x[1,3]/x[3,3]
+e21<- x[3,1]*x[2,3]/x[3,3]
+e22<- x[3,2]*x[2,3]/x[3,3]
+chisq <- (x[1,1]-e11)^2/e11 + (x[1,2]-e12)^2/e12 + (x[2,1]-e21)^2/e21 + (x[2,2]-e22)^2/e22
+return (chisq)
+}
+whipples_chi(combined)
+pchisq(323.21, df = 1, lower.tail = FALSE)
+outcome <- aov(SHUCK ~ CLASS * SEX, data = mydata)
+woutcome <- aov(formula = SHUCK ~ CLASS + SEX, data = mydata)
+summary(outcome)
+summary (woutcome)
+TukeyHSD(woutcome)
+library(ggplot2)
+ggplot(mydata, aes(x = VOLUME, y = SHUCK)) +
+geom_point(aes(color = CLASS))
+ggplot(mydata, aes(x = log(SHUCK), y = log(VOLUME))) +
+geom_point(aes(color =CLASS))
+
+mydata$L_SHUCK <- log(mydata$SHUCK)
+mydata$L_VOLUME <- log(mydata$VOLUME)
+regress <- lm(formula = L_SHUCK ~ L_VOLUME + CLASS + SEX, data = mydata)
+summary (regress)
+hist(regress$residuals)
+qqnorm(regress$residuals)
+ggplot(regress, aes(x = L_VOLUME,y = regress$residuals)) +
+geom_point(aes(color = CLASS))
+ggplot(regress, aes(y = regress$residuals, x = L_VOLUME)) +
+geom_point(aes(color = SEX))
+ggplot(regress, aes(x = "L_CLASS",y = regress$residuals)) +
+geom_boxplot(aes(color = CLASS)) + theme(axis.text = element_text(size = 12)) + labs(x = "CLASS", y =
+"Residual")
+ggplot(regress, aes(y = regress$residuals, x = "L_SEX")) +
+geom_boxplot(aes(color = SEX)) + theme(axis.text = element_text(size = 12)) + labs(x = "SEX", y =
+"Residual")
+#******************q6**********
+idxa <- mydata[,1]== "F" | mydata[, 1] == "M"
+
+#idxa <- mydata[,2]!="I"
+#mydata[idxa, 1]
+mydata[idxa, 3]
+max.v <- max(mydata$VOLUME)
+min.v <- min(mydata$VOLUME)
+delta <- (max.v - min.v)/100
+prop.adults <- numeric(0)
+volume.value <- numeric(0)
+total <- length(mydata[idxa,1])
+for (k in 1:100)
+{
+value <- min.v + k*delta
+volume.value[k] <- value
+prop.adults[k] <- sum(mydata$VOLUME[idxa] <= value)/total
+}
+n.adults <- sum(prop.adults <= 0.5)
+split.adults <- min.v + (n.adults + 0.5)*delta
+# This estimates the desired volume.
+plot(volume.value, prop.adults, col = "green", main = "Proportion of Adults Not Harvested",
+type = "l", lwd = 2)
+abline(h=0.5)
+abline(v = split.adults)
+#************infantsq6*********
+idxi <- mydata[,1]=="I"
+idxf <- mydata[,1]=="F"
+idxm <- mydata[,1]=="M"
+max.v <- max(mydata$VOLUME)
+min.v <- min(mydata$VOLUME)
+delta <- (max.v - min.v)/100
+prop.infants <- numeric(0)
+volume.value <- numeric(0)
+total <- length(mydata[idxi,1])
+for (k in 1:100)
+{
+value <- min.v + k*delta
+volume.value[k] <- value
+prop.infants[k] <- sum(mydata$VOLUME[idxi] <= value)/total
+}
+n.infants <- sum(prop.infants <= 0.5)
+split.infants <- min.v + (n.infants + 0.5)*delta # This estimates the desired volume.
+plot(volume.value, prop.infants, col = "blue", main = "Proportion of Infants Not Harvested",type = "l",
+lwd = 2)
+abline(h=0.5)
+abline(v = split.infants)
+#************q7**********
+prop.infantsn <- 1 - prop.infants
+prop.adultsn <- 1 - prop.adults
+prop.adultsn
+prop.infantsn
+plot(volume.value, prop.infants, col = "blue",type = "l", lwd = 2, main = "Proportion of Adults and Infants
+Protected", xlab = "Volume", ylab = "Proportion")
+lines(volume.value, prop.adults, col = "green",type = "l",lwd = 2)
+difference <- (1 - prop.adults) - (1 - prop.infants)
+plot(volume.value, difference, col = "red",type = "l", lwd = 2, main = "Difference in proportion", xlab =
+"Volume", ylab = "Difference in Proportion Harvested")
+max(difference)
+#int_abline(max(difference))
+which.max(difference)
+volume.value[24]
+min(volume.value[(1 - prop.infants) == 0]) # smallest volume cutoff with zero infants harvested
+cutoff0 <- 0.02498325
+index.A1 <- (mydata$CLASS=="A1")
+indexi <- index.A1 & idxi
+sum(mydata[indexi,11] >= cutoff0)/sum(index.A1)
+#******************q8***********
+plot(prop.infantsn, prop.adultsn, col = "blue",type = "l", lwd = 2, main = "ROC", xlab = "Volume", ylab =
+"Proportion")
+abline(a=0, b=1, col = "darkred", lty = 2, lwd = 2)
+#*******************q9*************
+min(volume.value[(1 - prop.infants) == 0]) # smallest volume cutoff with zero infants harvested
+cutoff1 <- 0.036
+index.A1 <- (mydata$CLASS=="A1")
+indexi <- index.A1 & idxi
+sum(mydata[indexi,11] >= cutoff1)/sum(index.A1)
+index.A2 <- (mydata$CLASS=="A2")
+indexi <- index.A2 & idxi
+sum(mydata[indexi, 11] >= cutoff1)/sum(index.A2)
+cutoff2 <- 0.034
+index.A1 <- (mydata$CLASS=="A1")
+indexi <- index.A1 & idxi
+sum(mydata[indexi,11] >= cutoff2)/sum(index.A1)
+index.A2 <- (mydata$CLASS=="A2")
+indexi <- index.A2 & idxi
+sum(mydata[indexi, 11] >= cutoff2)/sum(index.A2)
+cutoff3 <- 0.035
+index.A1 <- (mydata$CLASS=="A1")
+indexi <- index.A1 & idxi
+sum(mydata[indexi,11] >= cutoff3)/sum(index.A1)
+index.A2 <- (mydata$CLASS=="A2")
+indexi <- index.A2 & idxi
+sum(mydata[indexi, 11] >= cutoff3)/sum(index.A2)
+
